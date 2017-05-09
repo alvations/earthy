@@ -2,12 +2,17 @@
 
 from setuptools import setup
 
-requires = open('requirements.txt').readlines()
+try:
+    requires = open('requirements.txt').readlines()
+except FileNotFoundError:
+    requeires = ['gensim', 'scikit-learn', 'nltk',
+                 'six', 'beautifulsoup4', 'requests',
+                 'numpy', 'pandas']
 
 setup(
   name='earthy',
   packages=['earthy'],
-  version='0.0.2',
+  version='0.0.3',
   description='',
   install_requires=requires,
   author='Mere Mortal',
