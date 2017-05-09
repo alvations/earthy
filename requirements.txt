@@ -1,0 +1,8 @@
+gensim
+scikit-learn
+six
+beautifulsoup4
+requests
+nltk
+numpy
+pandas
