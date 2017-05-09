@@ -18,13 +18,13 @@ class Downloader:
         # Parse the XML file for available packages.
         self._packages_index, self._third_party = self.packages()
         # Set the default download directory if none is set.
-        self._download_dir = self.default_download_dir()
+        self._download_dir = download_dir if download_dir else self.default_download_dir()
         # Set the collection list.
         self._collections = {'all': self._packages_index,
                              'third_party': self._third_party
                              }
 
-    def default_download_dir(self):
+    def default_download_dir(self, download_dir=None):
         # Find the user's home directory.
         homedir = os.path.expanduser('~/')
         if homedir == '~/': # Sanity checks.

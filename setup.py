@@ -13,7 +13,7 @@ setup(
   author='Mere Mortal',
   license='MIT',
   url='https://github.com/alvations/earthy',
-  download_url='https://github.com/alvations/earthy/tarball/0.0.2',
+  #download_url='https://github.com/alvations/earthy/tarball/0.0.2',
   keywords=['natural language processing', 'computational linguistics'],
   classifiers=[],
 )
