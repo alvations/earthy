@@ -65,4 +65,5 @@ u'run'
 >>> pywsd_lemmatize('lessoning', apply_stemming=True)
 u'lesson'
 >>> lemmatize_sents('This is a foo bar sentence.')
+[('This', 'This', 'DT'), ('is', 'be', 'VBZ'), ('a', 'a', 'DT'), ('foo', 'foo', 'JJ'), ('bar', 'bar', 'NN'), ('sentence', 'sentence', 'NN'), ('.', '.', '.')]
 ```
