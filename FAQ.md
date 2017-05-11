@@ -35,3 +35,34 @@ For now, these wrappers are supported:
 >>> [pos_tag(word_tokenize(sent)) for sent in sent_tokenize(s)]
 [[('Earthy', 'NNP'), ('is', 'VBZ'), ('a', 'DT'), ('library', 'NN'), ('for', 'IN'), ('natural', 'JJ'), ('language', 'NN'), ('processing', 'NN'), ('in', 'IN'), ('Python', 'NNP'), ('.', '.')], [('Earthy', 'NNP'), ('is', 'VBZ'), ('built', 'VBN'), ('on', 'IN'), ('the', 'DT'), ('not-so-latest', 'JJ'), ('research', 'NN'), ('(', '('), ('for', 'IN'), ('now', 'RB'), (')', ')'), (',', ','), ('and', 'CC'), ('it', 'PRP'), ('is', 'VBZ'), ('a', 'DT'), ('researchware', 'NN'), ('that', 'WDT'), ("'s", 'VBZ'), ('very', 'RB'), ('use-able', 'JJ'), ('for', 'IN'), ('the', 'DT'), ('industry', 'NN'), ('.', '.')]]
 ```
+
+Other the classic default functions in NLTK, here's a few more that `earthy` wraps:
+
+  - `wordnet_lemmatize`: wraps around the `nltk.stem.WordNetLemmatizer().lemmatize` function.
+  - `snowball_stem`: wraps around the `nltk.stem.SnowballStemmer().stem` function.
+  - `porter_stem`: wraps around the `nltk.stem.SnowballStemmer('porter').stem` function.
+  - `pywsd_lemmatize` and `lemmatize_sent` are from https://gist.github.com/alvations/07758d02412d928414bb
+
+
+```python
+>>> from earthy.nltk_wrappers import *
+# Stemmers.
+>>> porter_stem('running')
+u'run'
+>>> snowball_stem('running')
+u'run'
+# Lemmatizers.
+>>> wordnet_lemmatize('running', 'v')
+u'run'
+>>> wordnet_lemmatize('running', 'n')
+'running'
+>>> pywsd_lemmatize('running')
+'running'
+>>> pywsd_lemmatize('running', 'v')
+u'run'
+>>> wordnet_lemmatize('lessoning')
+'lessoning'
+>>> pywsd_lemmatize('lessoning', apply_stemming=True)
+u'lesson'
+>>> lemmatize_sents('This is a foo bar sentence.')
+```
