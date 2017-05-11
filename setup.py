@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 requires = ['gensim', 'scikit-learn', 'nltk',
             'six', 'beautifulsoup4', 'requests',
@@ -8,8 +8,8 @@ requires = ['gensim', 'scikit-learn', 'nltk',
 
 setup(
   name='earthy',
-  packages=['earthy'],
-  version='0.0.6',
+  packages=find_packages(),
+  version='0.0.8',
   description='',
   install_requires=requires,
   author='Mere Mortal',
