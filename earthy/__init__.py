@@ -3,9 +3,10 @@
 from __future__ import absolute_import, print_function, division
 
 import pickle
+from itertools import chain
 
-from earthy.downloader import Downloader
-#from earthy.tokenize import TreebankTokenizer
+from earthy.nltk_wrappers import NLTKDownloader, NLTKWordTokenizer, AveragePerceptronTagger
+
 
 def download(name, download_dir=None, xml_url=None, quiet=False):
     """
@@ -13,21 +14,21 @@ def download(name, download_dir=None, xml_url=None, quiet=False):
     (Currently, it's wrapping NLTK's downloader.)
     """
     # Create the Downloader object.
-    global _downloader
+    global _nltk_downloader
     try:
-        _downloader
+        _nltk_downloader
     except NameError:
-        _downloader = Downloader(download_dir, xml_url)
-    _downloader.download(name, quiet=quiet)
+        _nltk_downloader = NLTKDownloader(download_dir, xml_url)
+    _nltk_downloader.download(name, quiet=quiet)
 
 
 def sent_tokenize(text, lang='english'):
     """
     Punkt sentence tokenizer from NLTK.
     """
-    global _sent_tokenizer
+    global _nltk_sent_tokenizer
     try:
-        _sent_tokenizer
+        _nltk_sent_tokenizer
     except NameError:
         # If the sentence tokenizer wasn't previously initialized.
         available_languages = ['czech', 'danish', 'dutch', 'english',
@@ -40,18 +41,33 @@ def sent_tokenize(text, lang='english'):
         download('punkt', quiet=True)
         path_to_punkt = _downloader._download_dir + '/tokenizers/punkt/{}.pickle'.format(lang)
         with open(path_to_punkt, 'rb') as fin:
-            _sent_tokenizer = pickle.load(fin)
+            _nltk_sent_tokenizer = pickle.load(fin)
     # Actual tokenization using the Punkt Model.
-    return _sent_tokenizer.tokenize(text)
+    return _nltk_sent_tokenizer.tokenize(text)
 
 
-'''
-def word_tokenize(text):
+def word_tokenize(text, keep_lines=False):
     """
-    Treebank tokenizer.
+    Improved treebank tokenizer from NLTK.
     """
-    global _word_tokenizer
+    global _nltk_word_tokenizer
     try:
-        _word_tokenizer
+        _nltk_word_tokenizer
     except NameError:
-'''
+        _nltk_word_tokenizer = NLTKWordTokenizer()
+    if keep_lines:
+        return _nltk_word_tokenizer.tokenize(text)
+    else:
+        return list(chain(*map(_nltk_word_tokenizer.tokenize, sent_tokenize(text))))
+
+
+def pos_tag(tokenized_text):
+    """
+    Averaged perceptron tagger from NLTK (originally from @honnibal)
+    """
+    global _nltk_pos_tagger
+    try:
+        _nltk_pos_tagger
+    except NameError:
+        _nltk_pos_tagger = AveragePerceptronTagger()
+    return _nltk_pos_tagger.tag(tokenized_text)
