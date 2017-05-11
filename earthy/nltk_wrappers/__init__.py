@@ -95,4 +95,4 @@ def pos_tag(tokenized_text):
     """
     Averaged perceptron tagger from NLTK (originally from @honnibal)
     """
-    return pos_tag_sents([tokenized_text])
+    return pos_tag_sents([tokenized_text])[0]
