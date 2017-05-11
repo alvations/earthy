@@ -9,7 +9,7 @@ requires = ['gensim', 'scikit-learn', 'nltk',
 setup(
   name='earthy',
   packages=find_packages(),
-  version='0.0.10',
+  version='0.0.11',
   description='',
   install_requires=requires,
   author='Mere Mortal',

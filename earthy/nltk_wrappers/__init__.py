@@ -6,6 +6,8 @@ from itertools import chain
 
 from nltk.tokenize.treebank import TreebankWordTokenizer
 from nltk.tag.perceptron import PerceptronTagger
+from nltk.stem import SnowballStemmer, WordNetLemmatizer
+from nltk.corpus import wordnet as wn
 
 from earthy.nltk_wrappers.downloader import NLTKDownloader
 
@@ -96,3 +98,67 @@ def pos_tag(tokenized_text):
     Averaged perceptron tagger from NLTK (originally from @honnibal)
     """
     return pos_tag_sents([tokenized_text])[0]
+
+
+def porter_stem(word):
+    return snowball_stem(word, 'porter')
+
+
+def snowball_stem(word, lang='english'):
+    global _nltk_snowball_stemmer
+    try:
+        _nltk_snowball_stemmer
+    except NameError:
+        available_languages = ['danish', 'dutch', 'english', 'finnish', 'french',
+                               'german', 'german2', 'hungarian', 'italian',
+                               'kraaij_pohlmann', 'lovins', 'norwegian',
+                               'porter', 'portuguese', 'romanian', 'russian',
+                               'spanish', 'swedish', 'turkish']
+        assert lang in available_languages, "Snowball Stemmer for {} not available".format(lang)
+        # Checks that the snowball data was previously downloaded.
+        download('snowball_data', quiet=True)
+        _nltk_snowball_stemmer = SnowballStemmer(lang)
+    return _nltk_snowball_stemmer.stem(word)
+
+
+def penn2morphy(penntag, default_tag='n'):
+    global morphy_tag
+    try:
+        morphy_tag
+    except NameError:
+        morphy_tag = {'NN':'n', 'JJ':'a', 'VB':'v', 'RB':'r',
+                      'n':'n', 'a':'a', 's':'s', 'v':'v', 'r':'r'}
+    try:
+        return morphy_tag[penntag[:2]]
+    except:
+        return default_tag
+
+
+def wordnet_lemmatize(word, pos='n'):
+    global _nltk_wordnet_lemmatizer
+    try:
+        _nltk_wordnet_lemmatizer
+    except NameError:
+        _nltk_wordnet_lemmatizer = WordNetLemmatizer()
+    return _nltk_wordnet_lemmatizer.lemmatize(word, penn2morphy(pos))
+
+
+
+def pywsd_lemmatize(word, pos='n', apply_stemming=False):
+    lemma = wordnet_lemmatize(word, penn2morphy(pos))
+    if wn.synsets(lemma):
+        return lemma
+    else:
+        if apply_stemming:
+            stem = snowball_stem(word)
+            return stem if wn.synsets(stem) else word
+        else:
+            return word
+
+
+def lemmatize_sents(text, apply_stemming=True):
+    return [(word, pywsd_lemmatize(word, pos, apply_stemming), pos)
+            for word, pos in pos_tag(word_tokenize(text))]
+
+
+lemmatize_sents('This is a foo bar sentence.')
