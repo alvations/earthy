@@ -5,8 +5,7 @@ from __future__ import absolute_import, print_function, division
 import pickle
 from itertools import chain
 
-from earthy.nltk_wrappers import NLTKDownloader, NLTKWordTokenizer, AveragePerceptronTagger
-
+from earthy.nltk_wrappers import *
 
 def download(name, download_dir=None, xml_url=None, quiet=False):
     """
@@ -39,7 +38,7 @@ def sent_tokenize(text, lang='english'):
         assert lang in available_languages, "Punkt Tokenizer for {} not available".format(lang)
         # Checks that the punkt tokenizer model was previously downloaded.
         download('punkt', quiet=True)
-        path_to_punkt = _downloader._download_dir + '/tokenizers/punkt/{}.pickle'.format(lang)
+        path_to_punkt = _nltk_downloader._download_dir + '/tokenizers/punkt/{}.pickle'.format(lang)
         with open(path_to_punkt, 'rb') as fin:
             _nltk_sent_tokenizer = pickle.load(fin)
     # Actual tokenization using the Punkt Model.
@@ -69,5 +68,9 @@ def pos_tag(tokenized_text):
     try:
         _nltk_pos_tagger
     except NameError:
-        _nltk_pos_tagger = AveragePerceptronTagger()
+        _nltk_pos_tagger = AveragedPerceptronTagger()
+        # Checks that the punkt tokenizer model was previously downloaded.
+        download('averaged_perceptron_tagger', quiet=True)
     return _nltk_pos_tagger.tag(tokenized_text)
+
+pos_tag(word_tokenize('earthy'))
