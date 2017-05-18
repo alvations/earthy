@@ -4,12 +4,13 @@ from setuptools import setup, find_packages
 
 requires = ['gensim', 'scikit-learn', 'nltk',
             'six', 'beautifulsoup4', 'requests',
-            'numpy', 'pandas']
+            'numpy', 'pandas',
+            'charguana']
 
 setup(
   name='earthy',
   packages=find_packages(),
-  version='0.0.11',
+  version='0.0.12',
   description='',
   install_requires=requires,
   author='Mere Mortal',

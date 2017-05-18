@@ -156,9 +156,9 @@ def pywsd_lemmatize(word, pos='n', apply_stemming=False):
             return word
 
 
-def lemmatize_sents(text, apply_stemming=True):
+def lemmatize_sent(text, apply_stemming=True):
     return [(word, pywsd_lemmatize(word, pos, apply_stemming), pos)
             for word, pos in pos_tag(word_tokenize(text))]
 
 
-lemmatize_sents('This is a foo bar sentence.')
+lemmatize_sent('This is a foo bar sentence.')
