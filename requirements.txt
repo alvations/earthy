@@ -6,3 +6,4 @@ requests
 nltk
 numpy
 pandas
+charguana
