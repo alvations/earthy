@@ -16,20 +16,6 @@ import earthy
 earthy.nltk_wrappers.download('all')
 ```
 
-----
-
-BTW, as of NLTK v3.2.3 , `panlex_lite` has been removed, so you can:
-
-```
-# To download all NLTK resources (now w/o panlex)
-import nltk
-nltk.download('all')
-
-# Only download github hosted NLTK resources.
-import nltk
-nltk.download('all-nltk')
-```
-
 
 How to use default NLTK functions in `earthy`?
 ====
@@ -50,7 +36,7 @@ For now, these wrappers are supported:
 [[('Earthy', 'NNP'), ('is', 'VBZ'), ('a', 'DT'), ('library', 'NN'), ('for', 'IN'), ('natural', 'JJ'), ('language', 'NN'), ('processing', 'NN'), ('in', 'IN'), ('Python', 'NNP'), ('.', '.')], [('Earthy', 'NNP'), ('is', 'VBZ'), ('built', 'VBN'), ('on', 'IN'), ('the', 'DT'), ('not-so-latest', 'JJ'), ('research', 'NN'), ('(', '('), ('for', 'IN'), ('now', 'RB'), (')', ')'), (',', ','), ('and', 'CC'), ('it', 'PRP'), ('is', 'VBZ'), ('a', 'DT'), ('researchware', 'NN'), ('that', 'WDT'), ("'s", 'VBZ'), ('very', 'RB'), ('use-able', 'JJ'), ('for', 'IN'), ('the', 'DT'), ('industry', 'NN'), ('.', '.')]]
 ```
 
-Other the classic default functions in NLTK, here's a few more that `earthy` wraps:
+Other the classic default functions in NLTK, here's a few more `earthy` wraps:
 
   - `wordnet_lemmatize`: wraps around the `nltk.stem.WordNetLemmatizer().lemmatize` function.
   - `snowball_stem`: wraps around the `nltk.stem.SnowballStemmer().stem` function.
@@ -78,6 +64,36 @@ u'run'
 'lessoning'
 >>> pywsd_lemmatize('lessoning', apply_stemming=True)
 u'lesson'
->>> lemmatize_sents('This is a foo bar sentence.')
+>>> lemmatize_sent('This is a foo bar sentence.')
 [('This', 'This', 'DT'), ('is', 'be', 'VBZ'), ('a', 'a', 'DT'), ('foo', 'foo', 'JJ'), ('bar', 'bar', 'NN'), ('sentence', 'sentence', 'NN'), ('.', '.', '.')]
+```
+
+What else can `earthy` do?
+====
+
+
+```python
+>>> from earthy.wordlist import punctuations, stopwords
+>>> from earthy.preprocessing import remove_stopwords
+
+# Punctuations.
+>>> print(''.join(punctuations))
+⦅︻⦉〈⦍「［⦑【⦕〔︘᚛⧛₣$₧(₫〉,₯﹜₳₷꠸﹞<﴾@⟅﹄﹈︿︽⦏⧙\￡`｢￥⟩］❪⟭❮❲฿௹⧽|⦆）؋⦊』⦎⦒〗⦖〛᚜〟₠#〚¤'〈₨+€/₰₴︷₸;„༽?﹃﹇⟆£⸢₥[⧚｝_⸤￦❩⟪❭⟮❱৲❵⸨{~⦃＄⦇（⦋《₍֏『⦓⦗⧘‚﹛〞₡"¥&₩﹝*₭.₱₵︶₹:》>〖﹂⁆⸦〘︸៛﹚^｠︺⟧❨⟫⟦❬⟯︼૱❰৳❴⟨৻︾︗⁾⦄﹀〉⦈」⦌₎】⦐〕⦔〙⦘〝!¢%₦)₪-₮༺₲︵₶︹༻₺=﴿﹁⁅⸣₢༼﹙⸥｛]｟₤￠｣⸧﹩⁽❫⟬❯⧼⸩❳}﷼
+
+# Stopwords.
+>>> print(stopwords['en'])
+[u'a', u"a's", u'able', u'about', u'above', u'according', ..., u'yourselves', u'z', u'zero']
+
+# Remove stopwords.
+>>> list(remove_stopwords('This is a foo bar sentence.'))
+['foo', 'bar', 'sentence']
+
+# Remove stopwords using customized stopword list.
+>>> mystops = set(['foo', 'bar']) | stopwords['en'] # Add 'foo' and 'bar' to stopwords.
+>>> list(remove_stopwords('This is a foo bar sentence.', custom_stoplist=mystops))
+['sentence']
+
+# Removes punctuations.
+>>> list(remove_stopwords('This is a foo bar sentence.', custom_stoplist=punctuations))
+['This', 'is', 'a', 'foo', 'bar', 'sentence']
 ```
