@@ -16,6 +16,20 @@ import earthy
 earthy.nltk_wrappers.download('all')
 ```
 
+----
+
+BTW, as of NLTK v3.2.3 , `panlex_lite` has been removed, so you can:
+
+```
+# To download all NLTK resources (now w/o panlex)
+import nltk
+nltk.download('all')
+
+# Only download github hosted NLTK resources.
+import nltk
+nltk.download('all-nltk')
+```
+
 
 How to use default NLTK functions in `earthy`?
 ====
